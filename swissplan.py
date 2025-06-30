@@ -7,8 +7,7 @@ st.title("🇨🇭 แผนเที่ยวสวิตเซอร์แล�
 
 st.header("📍 Day 1 - เดินทางถึง Zurich")
 
-st.image(
-    "https://upload.wikimedia.org/wikipedia/commons/0/0e/Z%C3%BCrich_view.jpg",
+st.image("https://grazietravel.com/wp-content/uploads/2020/04/Lake-Z%C3%BCrich.jpg",
     caption="วิวเมือง Zurich",
     use_container_width=True  # ← ใช้อันนี้แทน
 )
