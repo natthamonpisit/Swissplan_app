@@ -14,31 +14,40 @@ selected_day = st.selectbox("เลือกวัน", sheet_names)
 df = pd.read_excel(excel_path, sheet_name=selected_day)
 df.columns = df.columns.str.strip()
 
-# --- CSS: เส้นแนวตั้งกลางหน้าจอแบบแยก ---
-css_code = """
+# --- CSS (โหลด 1 ครั้งที่หัว) ---
+timeline_css = """
 <style>
+.timeline-container {
+    position: relative;
+    width: 100%;
+}
+
 .vertical-line {
-    position: fixed;
-    top: 320px; /* <-- เดิม 100px ตอนนี้เลื่อนลง */
+    position: absolute;
+    top: 0;
     bottom: 0;
     left: 50%;
     width: 6px;
     background-color: pink;
     z-index: 0;
 }
+
 .timeline-item {
     position: relative;
     width: 50%;
     padding: 10px;
 }
+
 .timeline-left {
     margin-right: 55%;
     text-align: right;
 }
+
 .timeline-right {
     margin-left: 55%;
     text-align: left;
 }
+
 .timeline-box {
     background: white;
     color: black;
@@ -47,22 +56,22 @@ css_code = """
     display: inline-block;
     max-width: 90%;
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    z-index: 1;
+    z-index: 2;
 }
 </style>
-<div class="vertical-line"></div>
 """
-st.markdown(css_code, unsafe_allow_html=True)
 
-# --- หัวข้อ ---
+st.markdown(timeline_css, unsafe_allow_html=True)
 st.markdown(f"### 🗓️ ข้อมูลสำหรับ {selected_day}")
 
-# --- Loop แสดงแต่ละกิจกรรมแบบฟันปลา ---
+# --- HTML layout เริ่มต้น ---
+st.markdown('<div class="timeline-container"><div class="vertical-line"></div>', unsafe_allow_html=True)
+
+# --- วนลูปแสดงกล่องแต่ละกิจกรรม ---
 for i, row in df.iterrows():
-    if pd.isna(row["Time"]):
-        continue
+    if pd.isna(row["Time"]): continue
     side = "timeline-left" if i % 2 == 0 else "timeline-right"
-    html_box = f"""
+    html = f"""
     <div class="timeline-item {side}">
         <div class="timeline-box">
             <b>🕒 เวลา:</b> {row["Time"]}<br>
@@ -72,4 +81,7 @@ for i, row in df.iterrows():
         </div>
     </div>
     """
-    st.markdown(html_box, unsafe_allow_html=True)
+    st.markdown(html, unsafe_allow_html=True)
+
+# --- ปิด timeline-container ---
+st.markdown("</div>", unsafe_allow_html=True)
