@@ -12,12 +12,9 @@ xls = pd.ExcelFile(excel_path)
 sheet_names = xls.sheet_names
 selected_day = st.selectbox("เลือกวัน", sheet_names)
 df = pd.read_excel(excel_path, sheet_name=selected_day)
-df.columns = df.columns.str.strip()  # ลบช่องว่างจากชื่อคอลัมน์
+df.columns = df.columns.str.strip()
 
-# --- แสดงหัวข้อ ---
-st.markdown(f"### 🗓️ ข้อมูลสำหรับ {selected_day}")
-
-# --- CSS สำหรับ Timeline ---
+# --- CSS ---
 timeline_css = """
 <style>
 .timeline {
@@ -61,15 +58,13 @@ timeline_css = """
 </style>
 """
 
-# --- แสดง CSS แค่ครั้งเดียวก่อนลูป ---
-st.markdown(timeline_css + '<div class="timeline">', unsafe_allow_html=True)
-
-# --- สร้างและแสดงกล่องทีละอันใน loop ---
+# --- สร้าง HTML กล่องทั้งหมดไว้ก่อน ---
+timeline_html = '<div class="timeline">'
 for i, row in df.iterrows():
     if pd.isna(row["Time"]):
-        continue  # ข้ามแถวที่ไม่มีเวลา
+        continue
     side = "timeline-left" if i % 2 == 0 else "timeline-right"
-    html_box = f"""
+    box = f"""
     <div class="timeline-item {side}">
         <div class="timeline-box">
             <b>🕒 เวลา:</b> {row["Time"]}<br>
@@ -79,7 +74,9 @@ for i, row in df.iterrows():
         </div>
     </div>
     """
-    st.markdown(html_box, unsafe_allow_html=True)
+    timeline_html += box
+timeline_html += "</div>"
 
-# --- ปิด div timeline ---
-st.markdown("</div>", unsafe_allow_html=True)
+# --- แสดงผลทั้งหมดพร้อมกัน (เพื่อให้เส้นชมพูทำงาน) ---
+st.markdown(f"### 🗓️ ข้อมูลสำหรับ {selected_day}")
+st.markdown(timeline_css + timeline_html, unsafe_allow_html=True)
