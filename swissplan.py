@@ -19,7 +19,7 @@ selected_day = st.selectbox("เลือกวัน", sheet_names)
 df = pd.read_excel(excel_path, sheet_name=selected_day)
 df.columns = df.columns.str.strip()
 
-# --- CSS ปรับกล่องซ้าย/ขวา และข้อความชิดซ้าย ---
+# --- CSS แบบฟันปลา timeline ---
 st.markdown("""
 <style>
 .timeline-wrapper {
@@ -40,38 +40,31 @@ st.markdown("""
     z-index: 0;
 }
 .timeline-box-wrapper {
+    display: flex;
+    flex-direction: column;
     position: relative;
     z-index: 1;
+    gap: 40px; /* ระยะห่างระหว่างกล่อง */
 }
 .timeline-item {
-    width: 45%;
-    padding: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    position: relative;
 }
-.timeline-left {
-    float: left;
-    margin-left: 0;
-    margin-right: 5%;
-}
-.timeline-right {
-    float: right;
-    margin-right: 0;
-    margin-left: 5%;
+.timeline-item.timeline-right {
+    justify-content: flex-end;
 }
 .timeline-box {
     background: white;
     color: black;
     padding: 15px;
     border-radius: 12px;
-    display: inline-block;
-    max-width: 100%;
+    max-width: 45%;
+    min-width: 220px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    text-align: left; /* จัดข้อความชิดซ้าย */
+    text-align: left;
     word-break: break-word;
-}
-.timeline-box-wrapper:after {
-    content: "";
-    display: table;
-    clear: both;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -90,8 +83,9 @@ for i, row in df.iterrows():
     if pd.isna(row["Time"]) or str(row["Time"]).strip() == "":
         continue
     side = "timeline-left" if i % 2 == 0 else "timeline-right"
+    timeline_item_class = f'timeline-item {side}'
     box_html = (
-        f'<div class="timeline-item {side}">'
+        f'<div class="{timeline_item_class}">'
         f'<div class="timeline-box">'
         f'<b>🕒 เวลา:</b> {safe_html(row["Time"])}<br>'
         f'<b>📍 ต้นทาง:</b> {safe_html(row["Location"])}<br>'
@@ -102,7 +96,7 @@ for i, row in df.iterrows():
     )
     timeline_html += box_html
 
-timeline_html += '</div></div>'  # ปิด div ไม่มีบรรทัดว่างต่อท้าย
+timeline_html += '</div></div>'
 
 timeline_html = timeline_html.strip()
 
