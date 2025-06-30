@@ -1,27 +1,22 @@
 import streamlit as st
 import pandas as pd
 
-# ตั้งค่าหน้า Streamlit
-st.set_page_config(page_title="แผนเที่ยวสวิตฯ", layout="wide")
-
-st.title("Test")
+st.set_page_config(page_title="แผนเที่ยวสวิต", layout="wide")
+st.title("🇨🇭 แผนเที่ยวสวิตเซอร์แลนด์ของพี่อุ๊ก & บิว 🤍")
 st.markdown("เลือกวันที่จะดูแผนได้เลยค่ะ")
 
-# โหลด Excel และชื่อชีต
+# โหลด Excel
 excel_path = "Plan/Swiss_plan_app.xlsx"
 xls = pd.ExcelFile(excel_path)
 sheet_names = xls.sheet_names
 
-# ให้ผู้ใช้เลือกวัน
 selected_day = st.selectbox("เลือกวัน", sheet_names)
-
-# โหลดข้อมูลใน sheet ที่เลือก
 df = pd.read_excel(excel_path, sheet_name=selected_day)
 
-# แสดงตารางพร้อม wrap text สวยงาม
+# ฟังก์ชันสำหรับแสดงตาราง HTML แบบสวยงาม
 def render_html_table(df):
     html = df.to_html(index=False, escape=False)
-    style = """
+    styled = """
     <style>
         table {
             border-collapse: collapse;
@@ -32,17 +27,15 @@ def render_html_table(df):
             background-color: #f0f0f0;
         }
         td, th {
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
             padding: 10px;
             white-space: pre-wrap;
             word-break: break-word;
-            text-align: left;
             vertical-align: top;
-            max-width: 300px;
         }
     </style>
     """
-    return style + html
+    return styled + html
 
 # แสดงผล
 st.markdown(f"### 📅 ข้อมูลสำหรับ {selected_day}")
