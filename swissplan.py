@@ -44,16 +44,19 @@ st.markdown("""
     flex-direction: column;
     position: relative;
     z-index: 1;
-    gap: 40px; /* ระยะห่างระหว่างกล่อง */
+    gap: 40px;
 }
 .timeline-item {
     width: 100%;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     position: relative;
 }
-.timeline-item.timeline-right {
+.timeline-item.timeline-left {
     justify-content: flex-end;
+}
+.timeline-item.timeline-right {
+    justify-content: flex-start;
 }
 .timeline-box {
     background: white;
@@ -65,6 +68,12 @@ st.markdown("""
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     text-align: left;
     word-break: break-word;
+}
+.timeline-item.timeline-left .timeline-box {
+    margin-right: 30px;
+}
+.timeline-item.timeline-right .timeline-box {
+    margin-left: 30px;
 }
 </style>
 """, unsafe_allow_html=True)
