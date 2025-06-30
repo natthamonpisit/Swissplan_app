@@ -14,8 +14,14 @@ selected_day = st.selectbox("เลือกวัน", sheet_names)
 df = pd.read_excel(excel_path, sheet_name=selected_day)
 df.columns = df.columns.str.strip()
 
-# --- CSS: เส้นกลางหน้า ยืดตาม content ---
-timeline_css = """
+# --- ล้าง HTML tag ที่อาจมาจาก Excel ---
+def sanitize(text):
+    if pd.isna(text):
+        return ""
+    return str(text).replace("<", "&lt;").replace(">", "&gt;")
+
+# --- CSS + เปิด div container ---
+timeline_html = """
 <style>
 .timeline-container {
     position: relative;
@@ -56,31 +62,34 @@ timeline_css = """
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 </style>
+<div class="timeline-container">
+    <div class="vertical-line"></div>
 """
-st.markdown(timeline_css, unsafe_allow_html=True)
 
-# --- หัวข้อข้อมูล ---
-st.markdown(f"### 🗓️ ข้อมูลสำหรับ {selected_day}")
-
-# --- เปิด div container ที่จะขยายความสูงตาม content ---
-st.markdown('<div class="timeline-container">', unsafe_allow_html=True)
-st.markdown('<div class="vertical-line"></div>', unsafe_allow_html=True)
-
-# --- วนลูปสร้างกล่อง ---
+# --- วนลูปแสดงกล่องใน timeline ---
 for i, row in df.iterrows():
     if pd.isna(row["Time"]): continue
     side = "timeline-left" if i % 2 == 0 else "timeline-right"
-    box_html = f"""
+
+    time = sanitize(row["Time"])
+    loc = sanitize(row["Location"])
+    dest = sanitize(row["Destination"])
+    act = sanitize(row["Activity"])
+
+    timeline_html += f"""
     <div class="timeline-item {side}">
         <div class="timeline-box">
-            <b>🕒 เวลา:</b> {row["Time"]}<br>
-            <b>📍 ต้นทาง:</b> {row["Location"]}<br>
-            <b>🏁 ปลายทาง:</b> {row["Destination"]}<br>
-            <b>🎯 กิจกรรม:</b> {row["Activity"]}
+            <b>🕒 เวลา:</b> {time}<br>
+            <b>📍 ต้นทาง:</b> {loc}<br>
+            <b>🏁 ปลายทาง:</b> {dest}<br>
+            <b>🎯 กิจกรรม:</b> {act}
         </div>
     </div>
     """
-    st.markdown(box_html, unsafe_allow_html=True)
 
-# --- ปิด container ---
-st.markdown('</div>', unsafe_allow_html=True)
+# --- ปิด div timeline-container ---
+timeline_html += "</div>"
+
+# --- แสดงข้อมูลสำหรับวัน ---
+st.markdown(f"### 🗓️ ข้อมูลสำหรับ {selected_day}")
+st.markdown(timeline_html, unsafe_allow_html=True)
