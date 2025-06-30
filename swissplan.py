@@ -19,7 +19,7 @@ selected_day = st.selectbox("เลือกวัน", sheet_names)
 df = pd.read_excel(excel_path, sheet_name=selected_day)
 df.columns = df.columns.str.strip()
 
-# --- CSS แบบฟันปลา timeline ---
+# --- CSS ฟันปลา timeline และกล่องชิดเส้น ---
 st.markdown("""
 <style>
 .timeline-wrapper {
@@ -78,19 +78,23 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- เริ่ม timeline ---
+# --- เตรียมข้อมูล row ที่จะแสดงจริง ---
+rows_to_show = []
+for _, row in df.iterrows():
+    if all(pd.isna(row[col]) or str(row[col]).strip() == "" for col in ["Time", "Location", "Destination", "Activity"]):
+        continue
+    if pd.isna(row["Time"]) or str(row["Time"]).strip() == "":
+        continue
+    rows_to_show.append(row)
+
+# --- สร้าง timeline HTML ---
 timeline_html = (
     '<div class="timeline-wrapper">'
     '<div class="timeline-line"></div>'
     '<div class="timeline-box-wrapper">'
 )
 
-for idx, (_, row) in enumerate(df.iterrows()):
-    # ข้าม row ที่ว่างจริงๆ
-    if all(pd.isna(row[col]) or str(row[col]).strip() == "" for col in ["Time", "Location", "Destination", "Activity"]):
-        continue
-    if pd.isna(row["Time"]) or str(row["Time"]).strip() == "":
-        continue
+for idx, row in enumerate(rows_to_show):
     side = "timeline-left" if idx % 2 == 0 else "timeline-right"
     timeline_item_class = f'timeline-item {side}'
     box_html = (
@@ -106,9 +110,6 @@ for idx, (_, row) in enumerate(df.iterrows()):
     timeline_html += box_html
 
 timeline_html += '</div></div>'
-
-timeline_html += '</div></div>'
-
 timeline_html = timeline_html.strip()
 
 st.markdown(timeline_html, unsafe_allow_html=True)
