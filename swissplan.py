@@ -80,7 +80,7 @@ st.markdown("""
 /* --- รูปการ์ตูนลอยบนเส้น --- */
 .chibi-sticky {
     position: fixed;
-    top: 260px; /* <-- ปรับเลขนี้ */
+    top: 280px; /* <-- ปรับเลขนี้ */
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
