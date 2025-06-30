@@ -5,15 +5,16 @@ st.set_page_config(page_title="แผนเที่ยวสวิต", layout=
 st.title("🇨🇭 แผนเที่ยวสวิตเซอร์แลนด์ของพี่อุ๊ก & บิว 🤍")
 st.markdown("เลือกวันที่จะดูแผนได้เลยค่ะ")
 
-# โหลด Excel
+# โหลดไฟล์ Excel
 excel_path = "Plan/Swiss_plan_app.xlsx"
 xls = pd.ExcelFile(excel_path)
 sheet_names = xls.sheet_names
-
 selected_day = st.selectbox("เลือกวัน", sheet_names)
+
+# อ่าน sheet ที่เลือก
 df = pd.read_excel(excel_path, sheet_name=selected_day)
 
-# ฟังก์ชันสำหรับแสดงตาราง HTML แบบสวยงาม
+# ฟังก์ชันสร้างตาราง HTML พร้อม wrap text
 def render_html_table(df):
     html = df.to_html(index=False, escape=False)
     styled = """
