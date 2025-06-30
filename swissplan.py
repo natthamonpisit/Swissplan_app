@@ -90,10 +90,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- แสดงรูปการ์ตูนลอยบนเส้น ---
-# ถ้าไฟล์อยู่ในโฟลเดอร์ย่อย เช่น images/ ให้เปลี่ยน path ตามจริง
+# --- แสดงรูปการ์ตูนลอยบนเส้น (ใช้ Raw URL จาก GitHub) ---
 st.markdown(
-    '<img class="chibi-sticky" src="images/ouk_bew_chibi.png">',
+    '<img class="chibi-sticky" src="https://github.com/natthamonpisit/Swissplan_app/blob/main/images/ouk_bew_chibi.png?raw=true">',
     unsafe_allow_html=True
 )
 
