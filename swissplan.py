@@ -11,7 +11,6 @@ st.set_page_config(page_title="แผนเที่ยวสวิต", layout=
 st.title("🇨🇭 แผนเที่ยวสวิตเซอร์แลนด์ของพี่อุ๊ก & บิว 🤍")
 st.markdown("เลือกวันที่จะดูแผนได้เลยค่ะ")
 
-
 # --- โหลด Excel ---
 excel_path = "Plan/Swiss_plan_app.xlsx"
 xls = pd.ExcelFile(excel_path)
@@ -69,7 +68,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- เริ่ม timeline ---
-# --- เริ่ม timeline ---
 timeline_html = """
 <div class="timeline-wrapper">
     <div class="timeline-line"></div>
@@ -97,6 +95,3 @@ timeline_html += """
 """
 
 st.markdown(timeline_html, unsafe_allow_html=True)
-
-# --- ปิดกล่องและ wrapper ---
-st.markdown("</div></div>", unsafe_allow_html=True)
