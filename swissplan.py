@@ -19,7 +19,7 @@ selected_day = st.selectbox("เลือกวัน", sheet_names)
 df = pd.read_excel(excel_path, sheet_name=selected_day)
 df.columns = df.columns.str.strip()
 
-# --- CSS แบบแก้ให้เส้นยืดตามกล่องจริง ---
+# --- CSS ปรับกล่องซ้าย/ขวา และข้อความชิดซ้าย ---
 st.markdown("""
 <style>
 .timeline-wrapper {
@@ -44,16 +44,18 @@ st.markdown("""
     z-index: 1;
 }
 .timeline-item {
-    width: 50%;
+    width: 45%;
     padding: 10px;
 }
 .timeline-left {
-    margin-right: 55%;
-    text-align: right;
+    float: left;
+    margin-left: 0;
+    margin-right: 5%;
 }
 .timeline-right {
-    margin-left: 55%;
-    text-align: left;
+    float: right;
+    margin-right: 0;
+    margin-left: 5%;
 }
 .timeline-box {
     background: white;
@@ -61,8 +63,15 @@ st.markdown("""
     padding: 15px;
     border-radius: 12px;
     display: inline-block;
-    max-width: 90%;
+    max-width: 100%;
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    text-align: left; /* จัดข้อความชิดซ้าย */
+    word-break: break-word;
+}
+.timeline-box-wrapper:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -95,7 +104,6 @@ for i, row in df.iterrows():
 
 timeline_html += '</div></div>'  # ปิด div ไม่มีบรรทัดว่างต่อท้าย
 
-# ตัดช่องว่างหัวท้าย (ถ้ามี)
 timeline_html = timeline_html.strip()
 
 st.markdown(timeline_html, unsafe_allow_html=True)
