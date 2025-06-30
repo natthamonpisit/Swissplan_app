@@ -112,9 +112,9 @@ window.addEventListener('DOMContentLoaded', function() {
         const anchorRect = anchor.getBoundingClientRect();
         const chibiHeight = chibi.offsetHeight;
         // ถ้า anchor ขึ้นมาอยู่บนจอ (ถึงปลาย timeline)
-        if (anchorRect.top < (180 + chibiHeight)) {
+        if (anchorRect.top < (chibiHeight + 20)) { // 20 = margin เผื่อไม่ให้ชนขอบ
             chibi.classList.add('chibi-absolute');
-            chibi.style.top = (anchorRect.top - chibiHeight) + 'px';
+            chibi.style.top = (window.innerHeight - chibiHeight - 20) + 'px';
         } else {
             chibi.classList.remove('chibi-absolute');
             chibi.style.top = '180px';
@@ -147,6 +147,9 @@ timeline_html = (
     '<div class="timeline-line"></div>'
     '<div class="timeline-box-wrapper">'
 )
+# ... (loop สร้างกล่อง) ...
+timeline_html += '</div></div><div id="timeline-end-anchor"></div>'
+timeline_html = timeline_html.strip()
 
 for idx, row in enumerate(rows_to_show):
     side = "timeline-left" if idx % 2 == 0 else "timeline-right"
