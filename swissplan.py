@@ -80,7 +80,7 @@ st.markdown("""
 /* --- รูปการ์ตูนลอยบนเส้น --- */
 .chibi-sticky {
     position: fixed;
-    top: 180px; /* ปรับให้ตรงกับกล่องแรก (ลองปรับเลขนี้ให้เหมาะกับ layout) */
+    top: 320px; /* ปรับให้ตรงกับกล่องแรก (ลองปรับเลขนี้ให้เหมาะกับ layout) */
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
