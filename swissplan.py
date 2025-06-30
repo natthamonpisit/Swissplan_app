@@ -1,89 +1,32 @@
-import streamlit as st
-import pandas as pd
+import streamlit as st              # เรียกใช้ไลบรารี Streamlit สำหรับทำเว็บแอป
+import pandas as pd                # เรียกใช้ Pandas เพื่อโหลดและจัดการข้อมูล Excel
 
-# ตั้งค่าหน้าเว็บ
+# ตั้งค่าหน้าเว็บให้มีชื่อและเป็น layout กว้าง
 st.set_page_config(page_title="แผนเที่ยวสวิต", layout="wide")
+
+# แสดงหัวข้อใหญ่ของหน้าเว็บ
 st.title("🇨🇭 แผนเที่ยวสวิตเซอร์แลนด์ของพี่อุ๊ก & บิว 🤍")
+
+# ข้อความนำสั้นๆ บอกให้ผู้ใช้เลือกวัน
 st.markdown("เลือกวันที่จะดูแผนได้เลยค่ะ")
 
-# โหลดไฟล์ Excel
-excel_path = "Plan/Swiss_plan_app.xlsx"
-xls = pd.ExcelFile(excel_path)
-sheet_names = xls.sheet_names
+# --------------------------
+# โหลดไฟล์ Excel และชื่อชีต
+# --------------------------
+
+excel_path = "Plan/Swiss_plan_app.xlsx"     # กำหนด path ของไฟล์ Excel ที่เก็บแผน
+xls = pd.ExcelFile(excel_path)              # โหลดไฟล์แบบ ExcelFile เพื่อดูรายชื่อชีต
+sheet_names = xls.sheet_names               # ดึงชื่อชีตทั้งหมด (เช่น Day1, Day2)
+
+# ให้ผู้ใช้เลือกชีตที่จะดู (วันไหน)
 selected_day = st.selectbox("เลือกวัน", sheet_names)
+
+# อ่านข้อมูลจากชีตที่เลือกมาเก็บไว้ใน DataFrame
 df = pd.read_excel(excel_path, sheet_name=selected_day)
 
-# แสดงหัวข้อ
+# แสดงหัวข้อย่อยเป็นชื่อวัน เช่น "ข้อมูลสำหรับ Day1"
 st.markdown(f"### 📅 ข้อมูลสำหรับ {selected_day}")
 
-# CSS
-st.markdown("""
-<style>
-.timeline {
-  position: relative;
-  margin: 30px 0;
-  padding: 0;
-}
-.timeline::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 6px;
-  background: hotpink;
-  transform: translateX(-50%);
-}
-
-.timeline-item {
-  position: relative;
-  width: 50%;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.timeline-left {
-  left: 0;
-  text-align: right;
-  transform: translateX(-100%);
-  position: relative;
-}
-
-.timeline-right {
-  left: 50%;
-  text-align: left;
-  position: relative;
-}
-
-.timeline-box {
-  background: white;
-  color: black;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  display: inline-block;
-  max-width: 80%;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# HTML timeline
-timeline_html = '<div class="timeline">'
-
-for i, row in df.iterrows():
-    side = "timeline-left" if i % 2 == 0 else "timeline-right"
-    timeline_html += f"""
-    <div class="timeline-item {side}">
-        <div class="timeline-box">
-            <b>🕒 เวลา:</b> {row['Time']}<br>
-            <b>📍 ต้นทาง:</b> {row['Location']}<br>
-            <b>🏁 ปลายทาง:</b> {row['Destination']}<br>
-            <b>🎯 กิจกรรม:</b> {row['Activity']}
-        </div>
-    </div>
-    """
-
-timeline_html += "</div>"
-
-# แสดง timeline
-st.markdown(timeline_html, unsafe_allow_html=True)
+# --------------------------
+# ใส่ CSS สำหรับจัดรูปแบบ timeline
+# ------------------
