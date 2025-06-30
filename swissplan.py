@@ -1,32 +1,29 @@
 import streamlit as st
 import pandas as pd
 
-# -----------------------------
-# 📌 ตั้งค่าหน้าเว็บ
-# -----------------------------
+# 👉 ตั้งค่าหน้าเว็บ
 st.set_page_config(page_title="แผนเที่ยวสวิต", layout="wide")
 st.title("🇨🇭 แผนเที่ยวสวิตเซอร์แลนด์ของพี่อุ๊ก & บิว 🤍")
 st.markdown("เลือกวันที่จะดูแผนได้เลยค่ะ")
 
-# -----------------------------
-# 📥 อ่านข้อมูลจาก Excel
-# -----------------------------
+# 👉 อ่านชื่อชีทจาก Excel
 excel_path = "Plan/Swiss_plan_app.xlsx"
 xls = pd.ExcelFile(excel_path)
 sheet_names = xls.sheet_names
+
+# 👉 ให้ผู้ใช้เลือกวัน
 selected_day = st.selectbox("เลือกวัน", sheet_names)
 
+# 👉 อ่านข้อมูลใน sheet ที่เลือก
 df = pd.read_excel(excel_path, sheet_name=selected_day)
-df.columns = df.columns.str.strip()  # ลบช่องว่างจากหัวคอลัมน์
+df.columns = df.columns.str.strip()  # ลบช่องว่างจากชื่อคอลัมน์
 
-# -----------------------------
-# 🎨 CSS สำหรับ Timeline
-# -----------------------------
+# 👉 เตรียม CSS ของ timeline
 timeline_css = """
 <style>
 .timeline {
     position: relative;
-    margin: 40px 0;
+    margin: 50px 0;
     padding: 0;
 }
 .timeline::before {
@@ -35,9 +32,9 @@ timeline_css = """
     left: 50%;
     top: 0;
     bottom: 0;
-    width: 6px;
-    background: #ff80b5;  /* เส้นกลางสีชมพู */
-    margin-left: -3px;
+    width: 4px;
+    background: pink;
+    margin-left: -2px;
 }
 .timeline-item {
     padding: 20px;
@@ -54,45 +51,34 @@ timeline_css = """
 .timeline-box {
     background: white;
     padding: 15px;
-    border-radius: 12px;
+    border-radius: 10px;
     display: inline-block;
     max-width: 90%;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-    font-size: 16px;
-    line-height: 1.5;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    color: black;
 }
 </style>
 """
 
-# -----------------------------
-# 🖼️ แสดงผล
-# -----------------------------
-st.markdown(f"### 🗓️ ข้อมูลสำหรับ {selected_day}")
-st.markdown(timeline_css, unsafe_allow_html=True)  # แสดง CSS แค่ครั้งเดียว
-
-# เปิดแท็ก timeline กลาง
-st.markdown('<div class="timeline">', unsafe_allow_html=True)
-
-# วนแสดงแต่ละกล่อง
+# 👉 สร้าง HTML กล่องแสดง timeline
+timeline_html = '<div class="timeline">'
 for i, row in df.iterrows():
-    if pd.isna(row["Time"]):  # ถ้าไม่มีเวลา ให้ข้ามแถวนี้ไป
-        continue
-
-    # สลับตำแหน่งซ้ายขวาแบบฟันปลา
+    if pd.isna(row["Time"]):
+        continue  # ข้ามถ้าไม่มีเวลา
     side = "timeline-left" if i % 2 == 0 else "timeline-right"
-
-    # กล่องแต่ละเหตุการณ์
-    html_box = f"""
-        <div class="timeline-item {side}">
-            <div class="timeline-box">
-                <b>🕒 เวลา:</b> {row["Time"]}<br>
-                <b>📍 ต้นทาง:</b> {row["Location"]}<br>
-                <b>🏁 ปลายทาง:</b> {row["Destination"]}<br>
-                <b>🎯 กิจกรรม:</b> {row["Activity"]}
-            </div>
+    box_html = f"""
+    <div class="timeline-item {side}">
+        <div class="timeline-box">
+            <b>🕒 เวลา:</b> {row["Time"]}<br>
+            <b>📍 ต้นทาง:</b> {row["Location"]}<br>
+            <b>🏁 ปลายทาง:</b> {row["Destination"]}<br>
+            <b>🎯 กิจกรรม:</b> {row["Activity"]}
         </div>
+    </div>
     """
-    st.markdown(html_box, unsafe_allow_html=True)
+    timeline_html += box_html
+timeline_html += "</div>"
 
-# ปิดแท็ก timeline
-st.markdown("</div>", unsafe_allow_html=True)
+# 👉 แสดงหัวข้อและ timeline
+st.markdown(f"### 🗓️ ข้อมูลสำหรับ {selected_day}")
+st.markdown(timeline_css + timeline_html, unsafe_allow_html=True)
