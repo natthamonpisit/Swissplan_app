@@ -85,13 +85,13 @@ timeline_html = (
     '<div class="timeline-box-wrapper">'
 )
 
-for i, row in df.iterrows():
+for idx, (_, row) in enumerate(df.iterrows()):
     # ข้าม row ที่ว่างจริงๆ
     if all(pd.isna(row[col]) or str(row[col]).strip() == "" for col in ["Time", "Location", "Destination", "Activity"]):
         continue
     if pd.isna(row["Time"]) or str(row["Time"]).strip() == "":
         continue
-    side = "timeline-left" if i % 2 == 0 else "timeline-right"
+    side = "timeline-left" if idx % 2 == 0 else "timeline-right"
     timeline_item_class = f'timeline-item {side}'
     box_html = (
         f'<div class="{timeline_item_class}">'
@@ -104,6 +104,8 @@ for i, row in df.iterrows():
         f'</div>'
     )
     timeline_html += box_html
+
+timeline_html += '</div></div>'
 
 timeline_html += '</div></div>'
 
