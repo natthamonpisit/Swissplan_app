@@ -19,7 +19,7 @@ css_code = """
 <style>
 .vertical-line {
     position: fixed;
-    top: 100px;
+    top: 280px; /* <-- เดิม 100px ตอนนี้เลื่อนลง */
     bottom: 0;
     left: 50%;
     width: 6px;
