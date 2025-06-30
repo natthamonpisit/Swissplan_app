@@ -1,21 +1,22 @@
 import streamlit as st
 import pandas as pd
 
+# ตั้งค่าหน้าเว็บ
 st.set_page_config(page_title="แผนเที่ยวสวิต", layout="wide")
 st.title("🇨🇭 แผนเที่ยวสวิตเซอร์แลนด์ของพี่อุ๊ก & บิว 🤍")
 st.markdown("เลือกวันที่จะดูแผนได้เลยค่ะ")
 
-# Load Excel
+# โหลด Excel
 excel_path = "Plan/Swiss_plan_app.xlsx"
 xls = pd.ExcelFile(excel_path)
 sheet_names = xls.sheet_names
 selected_day = st.selectbox("เลือกวัน", sheet_names)
 df = pd.read_excel(excel_path, sheet_name=selected_day)
 
-# แสดงหัวข้อ
+# หัวข้อวัน
 st.markdown(f"### 📅 ข้อมูลสำหรับ {selected_day}")
 
-# CSS สำหรับ Timeline
+# CSS
 st.markdown("""
 <style>
 .timeline {
@@ -30,7 +31,7 @@ st.markdown("""
   bottom: 0;
   left: 50%;
   width: 6px;
-  background: pink;
+  background: hotpink;
 }
 .timeline-item {
   position: relative;
@@ -58,7 +59,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# HTML Timeline
+# 🧠 สร้าง HTML timeline ทั้งหมด (รวมไว้ในตัวแปรเดียว)
 timeline_html = '<div class="timeline">'
 
 for i, row in df.iterrows():
@@ -76,5 +77,5 @@ for i, row in df.iterrows():
 
 timeline_html += '</div>'
 
-# แสดง Timeline
+# แสดงผล HTML timeline ทีเดียว
 st.markdown(timeline_html, unsafe_allow_html=True)
