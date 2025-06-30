@@ -22,6 +22,7 @@ st.markdown("""
     width: 100%;
     margin-top: 40px;
     padding-bottom: 50px;
+    min-height: 400px;
 }
 .timeline-line {
     position: absolute;
