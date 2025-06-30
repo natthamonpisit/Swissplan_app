@@ -4,25 +4,45 @@ import pandas as pd
 # ตั้งค่าหน้าเว็บ
 st.set_page_config(page_title="แผนเที่ยวสวิต", layout="wide")
 st.title("🇨🇭 แผนเที่ยวสวิตเซอร์แลนด์ของพี่อุ๊ก & บิว 🤍")
+st.markdown("เลือกวันที่จะดูแผนได้เลยค่ะ")
 
-df = pd.read_excel("Plan/Swiss_plan_app.xlsx")
-df.columns = df.columns.str.strip()  # Remove extra spaces
-st.write(df.columns.tolist())  # Show column names for debugging
+# โหลดชื่อชีททั้งหมดจากไฟล์ Excel
+excel_path = "Plan/Swiss_plan_app.xlsx"
+xls = pd.ExcelFile(excel_path)
+sheet_names = xls.sheet_names
 
-# Use HTML/CSS to overlay the character on the rail track
-st.markdown(
-    """
-    <div style="position: relative; width: 600px; height: 150px;">
-        <img src="images/rail_track.png" style="width: 100%; position: absolute; left: 0; top: 50px; z-index: 1;">
-        <img src="images/ouk_bew_chibi.png" style="width: 100px; position: absolute; left: 250px; top: 0; z-index: 2;">
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+# ให้พี่เลือกวันจากชีท
+selected_day = st.selectbox("เลือกวัน", sheet_names)
 
-# Display your travel plan as before
-for idx, row in df.iterrows():
-    st.markdown(f"### {row['Location']} to {row['Destination']}")
-    st.write(f"**Time:** {row['Time']}")
-    st.write(f"**Activity:** {row['Activity']}")
-    st.markdown("---")
+# อ่านข้อมูลจากชีทที่เลือก
+df = pd.read_excel(excel_path, sheet_name=selected_day)
+
+# แสดงหัวข้อ
+st.markdown(f"### 📅 ข้อมูลสำหรับ {selected_day}")
+
+# ---- CSS และ HTML ----
+table_style = """
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 16px;
+    }
+    th {
+        background-color: #f0f0f0;
+    }
+    td, th {
+        border: 1px solid #ccc;
+        padding: 10px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        vertical-align: top;
+    }
+</style>
+"""
+
+# สร้าง HTML จาก DataFrame
+html_table = df.to_html(index=False, escape=False)
+
+# แสดง HTML + CSS ด้วย markdown (เปิดให้ HTML ทำงานได้)
+st.markdown(table_style + html_table, unsafe_allow_html=True)
