@@ -63,14 +63,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- เริ่ม timeline ---
-st.markdown('<div class="timeline-wrapper">', unsafe_allow_html=True)
-st.markdown('<div class="timeline-line"></div>', unsafe_allow_html=True)
-st.markdown('<div class="timeline-box-wrapper">', unsafe_allow_html=True)
-
-# --- render box สลับซ้ายขวา ---
-def safe_html(text):
-    if pd.isna(text): return ""
-    return str(text).replace("<", "&lt;").replace(">", "&gt;")
+timeline_html = """
+<div class="timeline-wrapper">
+    <div class="timeline-line"></div>
+    <div class="timeline-box-wrapper">
+"""
 
 for i, row in df.iterrows():
     if pd.isna(row["Time"]): continue
@@ -85,7 +82,14 @@ for i, row in df.iterrows():
         </div>
     </div>
     """
-    st.markdown(box_html, unsafe_allow_html=True)
+    timeline_html += box_html
+
+timeline_html += """
+    </div>
+</div>
+"""
+
+st.markdown(timeline_html, unsafe_allow_html=True)
 
 # --- ปิดกล่องและ wrapper ---
 st.markdown("</div></div>", unsafe_allow_html=True)
