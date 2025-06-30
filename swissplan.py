@@ -114,10 +114,10 @@ window.addEventListener('DOMContentLoaded', function() {
         // ถ้า anchor ขึ้นมาอยู่บนจอ (ถึงปลาย timeline)
         if (anchorRect.top < (chibiHeight + 20)) {
             chibi.classList.add('chibi-absolute');
-            chibi.style.top = (anchorRect.top - chibiHeight + window.scrollY) + 'px';
+            chibi.style.top = (anchorRect.top - chibiHeight + 20) + 'px';
         } else {
             chibi.classList.remove('chibi-absolute');
-            chibi.style.top = '320px'; // หรือค่าที่คุณต้องการ
+            chibi.style.top = '320px';
         }
     }
     window.addEventListener('scroll', onScroll);
@@ -163,12 +163,8 @@ for idx, row in enumerate(rows_to_show):
     )
     timeline_html += box_html
 
-# --- เพิ่ม anchor ที่ปลาย timeline (ใน timeline-wrapper) ---
+# --- เพิ่ม anchor ที่ปลาย timeline (ใน timeline-wrapper หลัง timeline-box-wrapper) ---
 timeline_html += '</div><div id="timeline-end-anchor"></div></div>'
-timeline_html = timeline_html.strip()
-
-# --- เพิ่ม anchor ที่ปลาย timeline ---
-timeline_html += '<div id="timeline-end-anchor"></div></div></div>'
 timeline_html = timeline_html.strip()
 
 st.markdown(timeline_html, unsafe_allow_html=True)
