@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import textwrap
 
 # --- ฟังก์ชัน escape html ---
 def safe_html(text):
@@ -69,11 +68,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- เริ่ม timeline ---
-timeline_html = textwrap.dedent("""
-<div class="timeline-wrapper">
-    <div class="timeline-line"></div>
-    <div class="timeline-box-wrapper">
-""")
+timeline_html = (
+    '<div class="timeline-wrapper">'
+    '<div class="timeline-line"></div>'
+    '<div class="timeline-box-wrapper">'
+)
 
 for i, row in df.iterrows():
     # ข้าม row ที่ว่างจริงๆ
@@ -82,21 +81,21 @@ for i, row in df.iterrows():
     if pd.isna(row["Time"]) or str(row["Time"]).strip() == "":
         continue
     side = "timeline-left" if i % 2 == 0 else "timeline-right"
-    box_html = f"""
-    <div class="timeline-item {side}">
-        <div class="timeline-box">
-            <b>🕒 เวลา:</b> {safe_html(row["Time"])}<br>
-            <b>📍 ต้นทาง:</b> {safe_html(row["Location"])}<br>
-            <b>🏁 ปลายทาง:</b> {safe_html(row["Destination"])}<br>
-            <b>🎯 กิจกรรม:</b> {safe_html(row["Activity"])}
-        </div>
-    </div>
-    """
-    timeline_html += textwrap.dedent(box_html)
+    box_html = (
+        f'<div class="timeline-item {side}">'
+        f'<div class="timeline-box">'
+        f'<b>🕒 เวลา:</b> {safe_html(row["Time"])}<br>'
+        f'<b>📍 ต้นทาง:</b> {safe_html(row["Location"])}<br>'
+        f'<b>🏁 ปลายทาง:</b> {safe_html(row["Destination"])}<br>'
+        f'<b>🎯 กิจกรรม:</b> {safe_html(row["Activity"])}'
+        f'</div>'
+        f'</div>'
+    )
+    timeline_html += box_html
 
-timeline_html += textwrap.dedent("""
-    </div>
-</div>
-""")
+timeline_html += '</div></div>'  # ปิด div ไม่มีบรรทัดว่างต่อท้าย
+
+# ตัดช่องว่างหัวท้าย (ถ้ามี)
+timeline_html = timeline_html.strip()
 
 st.markdown(timeline_html, unsafe_allow_html=True)
