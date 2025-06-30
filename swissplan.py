@@ -14,7 +14,7 @@ st.set_page_config(layout="wide")
 st.image("images/rail_track.png", use_column_width=True)
 
 # Show your character and train images
-st.image(["images/train.png", "images/ouk_bew_chibi.png"], width=100)
+st.image(["images/Train.png", "images/ouk_bew_chibi.png"], width=100)
 
 # Display each row from your travel plan
 for idx, row in df.iterrows():
