@@ -19,7 +19,7 @@ selected_day = st.selectbox("เลือกวัน", sheet_names)
 df = pd.read_excel(excel_path, sheet_name=selected_day)
 df.columns = df.columns.str.strip()
 
-# --- CSS ฟันปลา timeline และกล่องชิดเส้น ---
+# --- CSS ฟันปลา timeline และกล่องชิดเส้น (กล่องแรกซ้าย) ---
 st.markdown("""
 <style>
 .timeline-wrapper {
@@ -53,10 +53,10 @@ st.markdown("""
     position: relative;
 }
 .timeline-item.timeline-left {
-    justify-content: flex-end;
+    justify-content: flex-start;   /* ซ้าย */
 }
 .timeline-item.timeline-right {
-    justify-content: flex-start;
+    justify-content: flex-end;     /* ขวา */
 }
 .timeline-box {
     background: white;
@@ -70,10 +70,12 @@ st.markdown("""
     word-break: break-word;
 }
 .timeline-item.timeline-left .timeline-box {
-    margin-right: 30px;
+    margin-left: 30px;
+    margin-right: 0;
 }
 .timeline-item.timeline-right .timeline-box {
-    margin-left: 30px;
+    margin-right: 30px;
+    margin-left: 0;
 }
 </style>
 """, unsafe_allow_html=True)
