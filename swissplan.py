@@ -84,27 +84,29 @@ st.markdown("""
     transition: top 0.2s, opacity 0.2s;
 }
 .chibi-sticky.chibi-stop {
+    position: absolute !important;
     top: auto !important;
-    bottom: 50px !important; /* ให้หยุดห่างจากขอบล่างของ timeline-wrapper */
+    bottom: 0 !important;
 }
 </style>
 <script>
 window.addEventListener('DOMContentLoaded', function() {
     const chibi = document.querySelector('.chibi-sticky');
-    const timeline = document.querySelector('.timeline-wrapper');
+    const anchor = document.getElementById('timeline-end');
     function onScroll() {
-        if (!chibi || !timeline) return;
-        const timelineRect = timeline.getBoundingClientRect();
+        if (!chibi || !anchor) return;
+        const anchorRect = anchor.getBoundingClientRect();
         const chibiHeight = chibi.offsetHeight;
-        // ถ้าขอบล่างของ timeline ขึ้นมาอยู่บนจอ (ถึงปลาย timeline)
-        if (timelineRect.bottom < (chibiHeight + 70)) {
+        if (anchorRect.top < window.innerHeight - chibiHeight - 50) {
             chibi.classList.add('chibi-stop');
-            chibi.style.opacity = 1;
+            chibi.style.position = 'absolute';
+            chibi.style.top = (anchor.offsetTop - chibiHeight - 10) + 'px';
         } else {
             chibi.classList.remove('chibi-stop');
+            chibi.style.position = 'fixed';
             chibi.style.top = '320px';
-            chibi.style.opacity = 1;
         }
+        chibi.style.opacity = 1;
     }
     window.addEventListener('scroll', onScroll);
     onScroll();
@@ -146,7 +148,8 @@ for idx, row in enumerate(rows_to_show):
     )
     timeline_html += box_html
 
-timeline_html += '</div></div>'
+# เพิ่ม anchor ที่ปลาย timeline
+timeline_html += '<div id="timeline-end"></div></div></div>'
 timeline_html = timeline_html.strip()
 
 st.markdown(timeline_html, unsafe_allow_html=True)
