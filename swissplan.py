@@ -5,7 +5,6 @@ import textwrap
 # --- ฟังก์ชัน escape html ---
 def safe_html(text):
     if pd.isna(text): return ""
-    # ลบช่องว่างหัวท้ายและแทน \n ด้วย <br>
     return str(text).strip().replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>")
 
 # --- ตั้งค่าหน้าเว็บ ---
@@ -77,7 +76,11 @@ timeline_html = textwrap.dedent("""
 """)
 
 for i, row in df.iterrows():
-    if pd.isna(row["Time"]): continue
+    # ข้าม row ที่ว่างจริงๆ
+    if all(pd.isna(row[col]) or str(row[col]).strip() == "" for col in ["Time", "Location", "Destination", "Activity"]):
+        continue
+    if pd.isna(row["Time"]) or str(row["Time"]).strip() == "":
+        continue
     side = "timeline-left" if i % 2 == 0 else "timeline-right"
     box_html = f"""
     <div class="timeline-item {side}">
