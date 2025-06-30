@@ -1,10 +1,16 @@
 import streamlit as st
 import pandas as pd
 
+# --- ฟังก์ชัน escape html ---
+def safe_html(text):
+    if pd.isna(text): return ""
+    return str(text).replace("<", "&lt;").replace(">", "&gt;")
+    
 # --- ตั้งค่าหน้าเว็บ ---
 st.set_page_config(page_title="แผนเที่ยวสวิต", layout="wide")
 st.title("🇨🇭 แผนเที่ยวสวิตเซอร์แลนด์ของพี่อุ๊ก & บิว 🤍")
 st.markdown("เลือกวันที่จะดูแผนได้เลยค่ะ")
+
 
 # --- โหลด Excel ---
 excel_path = "Plan/Swiss_plan_app.xlsx"
@@ -62,6 +68,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# --- เริ่ม timeline ---
 # --- เริ่ม timeline ---
 timeline_html = """
 <div class="timeline-wrapper">
