@@ -6,6 +6,8 @@ st.set_page_config(page_title="แผนเที่ยวสวิต", layout=
 st.title("🇨🇭 แผนเที่ยวสวิตเซอร์แลนด์ของพี่อุ๊ก & บิว 🤍")
 
 df = pd.read_excel("Plan/Swiss_plan_app.xlsx")
+df.columns = df.columns.str.strip()  # Remove extra spaces
+st.write(df.columns.tolist())  # Show column names for debugging
 
 # Use HTML/CSS to overlay the character on the rail track
 st.markdown(
