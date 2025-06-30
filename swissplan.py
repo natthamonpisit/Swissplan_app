@@ -1,17 +1,14 @@
 import streamlit as st
 import pandas as pd
 
-# --- ฟังก์ชัน escape html ---
 def safe_html(text):
     if pd.isna(text): return ""
     return str(text).strip().replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>")
 
-# --- ตั้งค่าหน้าเว็บ ---
 st.set_page_config(page_title="แผนเที่ยวสวิต", layout="wide")
 st.title("🇨🇭 แผนเที่ยวสวิตเซอร์แลนด์ของพี่อุ๊ก & บิว 🤍")
 st.markdown("เลือกวันที่จะดูแผนได้เลยค่ะ")
 
-# --- โหลด Excel ---
 excel_path = "Plan/Swiss_plan_app.xlsx"
 xls = pd.ExcelFile(excel_path)
 sheet_names = xls.sheet_names
@@ -19,7 +16,6 @@ selected_day = st.selectbox("เลือกวัน", sheet_names)
 df = pd.read_excel(excel_path, sheet_name=selected_day)
 df.columns = df.columns.str.strip()
 
-# --- CSS + JS สำหรับการ์ตูนลอยและหยุดที่ปลายเส้น ---
 st.markdown("""
 <style>
 .timeline-wrapper {
@@ -85,39 +81,29 @@ st.markdown("""
     z-index: 10;
     width: 80px;
     pointer-events: none;
-    transition: top 0.2s;
+    transition: top 0.2s, opacity 0.2s;
 }
-.chibi-absolute {
-    position: absolute !important;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    z-index: 10;
-}
-#timeline-end-anchor {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 1px;
-    width: 1px;
-    bottom: 0;
+.chibi-sticky.chibi-stop {
+    top: auto !important;
+    bottom: 50px !important; /* ให้หยุดห่างจากขอบล่างของ timeline-wrapper */
 }
 </style>
 <script>
 window.addEventListener('DOMContentLoaded', function() {
     const chibi = document.querySelector('.chibi-sticky');
-    const anchor = document.getElementById('timeline-end-anchor');
+    const timeline = document.querySelector('.timeline-wrapper');
     function onScroll() {
-        if (!chibi || !anchor) return;
-        const anchorRect = anchor.getBoundingClientRect();
+        if (!chibi || !timeline) return;
+        const timelineRect = timeline.getBoundingClientRect();
         const chibiHeight = chibi.offsetHeight;
-        // ถ้า anchor ขึ้นมาอยู่บนจอ (ถึงปลาย timeline)
-        if (anchorRect.top < (chibiHeight + 20)) {
-            chibi.classList.add('chibi-absolute');
-            chibi.style.top = (anchorRect.top - chibiHeight + 20) + 'px';
+        // ถ้าขอบล่างของ timeline ขึ้นมาอยู่บนจอ (ถึงปลาย timeline)
+        if (timelineRect.bottom < (chibiHeight + 70)) {
+            chibi.classList.add('chibi-stop');
+            chibi.style.opacity = 1;
         } else {
-            chibi.classList.remove('chibi-absolute');
+            chibi.classList.remove('chibi-stop');
             chibi.style.top = '320px';
+            chibi.style.opacity = 1;
         }
     }
     window.addEventListener('scroll', onScroll);
@@ -126,13 +112,11 @@ window.addEventListener('DOMContentLoaded', function() {
 </script>
 """, unsafe_allow_html=True)
 
-# --- แสดงรูปการ์ตูนลอยบนเส้น (ใช้ Raw URL จาก GitHub) ---
 st.markdown(
     '<img class="chibi-sticky" src="https://github.com/natthamonpisit/Swissplan_app/blob/main/images/ouk_bew_chibi.png?raw=true">',
     unsafe_allow_html=True
 )
 
-# --- เตรียมข้อมูล row ที่จะแสดงจริง ---
 rows_to_show = []
 for _, row in df.iterrows():
     if all(pd.isna(row[col]) or str(row[col]).strip() == "" for col in ["Time", "Location", "Destination", "Activity"]):
@@ -141,7 +125,6 @@ for _, row in df.iterrows():
         continue
     rows_to_show.append(row)
 
-# --- สร้าง timeline HTML (เพิ่ม anchor ที่ปลาย timeline) ---
 timeline_html = (
     '<div class="timeline-wrapper">'
     '<div class="timeline-line"></div>'
@@ -163,8 +146,7 @@ for idx, row in enumerate(rows_to_show):
     )
     timeline_html += box_html
 
-# --- เพิ่ม anchor ที่ปลาย timeline (ใน timeline-wrapper หลัง timeline-box-wrapper) ---
-timeline_html += '</div><div id="timeline-end-anchor"></div></div>'
+timeline_html += '</div></div>'
 timeline_html = timeline_html.strip()
 
 st.markdown(timeline_html, unsafe_allow_html=True)
