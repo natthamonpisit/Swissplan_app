@@ -14,7 +14,7 @@ selected_day = st.selectbox("เลือกวัน", sheet_names)
 df = pd.read_excel(excel_path, sheet_name=selected_day)
 df.columns = df.columns.str.strip()
 
-# --- CSS แบบแก้ให้เส้นยืดตามกล่องจริง ---
+# --- CSS ---
 st.markdown("""
 <style>
 .timeline-wrapper {
@@ -22,6 +22,11 @@ st.markdown("""
     width: 100%;
     margin-top: 40px;
     padding-bottom: 50px;
+    min-height: 1000px;  /* เพิ่มความสูงเริ่มต้นให้ timeline-wrapper */
+}
+.timeline-box-wrapper {
+    position: relative;
+    z-index: 1;
 }
 .timeline-line {
     position: absolute;
@@ -32,10 +37,6 @@ st.markdown("""
     background-color: pink;
     transform: translateX(-50%);
     z-index: 0;
-}
-.timeline-box-wrapper {
-    position: relative;
-    z-index: 1;
 }
 .timeline-item {
     width: 50%;
@@ -61,12 +62,11 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- เริ่ม timeline ---
+# --- เริ่ม timeline wrapper ---
 st.markdown('<div class="timeline-wrapper">', unsafe_allow_html=True)
-st.markdown('<div class="timeline-line"></div>', unsafe_allow_html=True)
 st.markdown('<div class="timeline-box-wrapper">', unsafe_allow_html=True)
 
-# --- render box สลับซ้ายขวา ---
+# --- วน loop แสดง box ---
 def safe_html(text):
     if pd.isna(text): return ""
     return str(text).replace("<", "&lt;").replace(">", "&gt;")
@@ -86,5 +86,5 @@ for i, row in df.iterrows():
     """
     st.markdown(box_html, unsafe_allow_html=True)
 
-# --- ปิดกล่องและ wrapper ---
-st.markdown("</div></div>", unsafe_allow_html=True)
+# --- ปิด timeline-box-wrapper แล้วค่อยวางเส้น timeline-line ---
+st.markdown('</div><div class="timeline-line"></div></div>', unsafe_allow_html=True)
