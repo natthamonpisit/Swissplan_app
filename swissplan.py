@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import textwrap
 
 # --- ฟังก์ชัน escape html ---
 def safe_html(text):
@@ -68,11 +69,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- เริ่ม timeline ---
-timeline_html = """
+timeline_html = textwrap.dedent("""
 <div class="timeline-wrapper">
     <div class="timeline-line"></div>
     <div class="timeline-box-wrapper">
-"""
+""")
 
 for i, row in df.iterrows():
     if pd.isna(row["Time"]): continue
@@ -87,11 +88,11 @@ for i, row in df.iterrows():
         </div>
     </div>
     """
-    timeline_html += box_html
+    timeline_html += textwrap.dedent(box_html)
 
-timeline_html += """
+timeline_html += textwrap.dedent("""
     </div>
 </div>
-"""
+""")
 
 st.markdown(timeline_html, unsafe_allow_html=True)
