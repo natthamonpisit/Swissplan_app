@@ -22,10 +22,7 @@ st.markdown(
 
 # Display your travel plan as before
 for idx, row in df.iterrows():
-    st.markdown(f"### {row['Date']} - {row['Location']} to {row['Destination']}")
+    st.markdown(f"### {row['Location']} to {row['Destination']}")
     st.write(f"**Time:** {row['Time']}")
-    st.write(f"**Estimated Travel Time:** {row['EST Travel time (Minute)']} minutes")
     st.write(f"**Activity:** {row['Activity']}")
-    st.write(f"**Transportation:** {row['Transportation']}")
-    st.write(f"**Notes:** {row['Notes']}")
     st.markdown("---")
