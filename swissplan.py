@@ -19,7 +19,7 @@ selected_day = st.selectbox("เลือกวัน", sheet_names)
 df = pd.read_excel(excel_path, sheet_name=selected_day)
 df.columns = df.columns.str.strip()
 
-# --- CSS ฟันปลา timeline และกล่องชิดเส้น (กล่องแรกซ้าย) ---
+# --- CSS ฟันปลา timeline, กล่องชิดเส้น, และรูปการ์ตูนลอยบนเส้น ---
 st.markdown("""
 <style>
 .timeline-wrapper {
@@ -77,8 +77,25 @@ st.markdown("""
     margin-right: 30px;
     margin-left: 0;
 }
+/* --- รูปการ์ตูนลอยบนเส้น --- */
+.chibi-sticky {
+    position: fixed;
+    top: 180px; /* ปรับให้ตรงกับกล่องแรก (ลองปรับเลขนี้ให้เหมาะกับ layout) */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    width: 80px; /* ปรับขนาดตามต้องการ */
+    pointer-events: none; /* ไม่ให้บังการคลิก */
+}
 </style>
 """, unsafe_allow_html=True)
+
+# --- แสดงรูปการ์ตูนลอยบนเส้น ---
+# ถ้าไฟล์อยู่ในโฟลเดอร์ย่อย เช่น images/ ให้เปลี่ยน path ตามจริง
+st.markdown(
+    '<img class="chibi-sticky" src="images/ouk_bew_chibi.png">',
+    unsafe_allow_html=True
+)
 
 # --- เตรียมข้อมูล row ที่จะแสดงจริง ---
 rows_to_show = []
